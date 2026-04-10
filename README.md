@@ -31,6 +31,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.prompt import Prompt
 from rich import box
+from rich.align import Align
 
 console = Console()
 
@@ -42,47 +43,97 @@ def buscar_ip(ip):
         dados = resposta.json()
 
         if dados["status"] != "success":
-            console.print(f"[red]Erro:[/red] {dados.get('message', 'IP inválido')}")
+            console.print(
+                Panel(
+                    f"[bold red]ERRO[/bold red]\n\n[bold red]{dados.get('message', 'IP inválido')}[/bold red]",
+                    border_style="red",
+                    title="[bold red]SYSTEM[/bold red]"
+                )
+            )
             return
 
-        tabela = Table(title=f"Informações do IP {dados['query']}", box=box.DOUBLE_EDGE)
-        tabela.add_column("Campo", style="cyan", no_wrap=True)
-        tabela.add_column("Informação", style="green")
+        tabela = Table(
+            title=f"[bold red]DADOS DO IP {dados['query']}[/bold red]",
+            box=box.DOUBLE_EDGE,
+            border_style="red",
+            header_style="bold red"
+        )
+
+        tabela.add_column("CAMPO", style="red", no_wrap=True)
+        tabela.add_column("INFORMAÇÃO", style="bold red")
 
         tabela.add_row("IP", dados["query"])
-        tabela.add_row("País", dados["country"])
-        tabela.add_row("Região", dados["regionName"])
-        tabela.add_row("Cidade", dados["city"])
+        tabela.add_row("PAÍS", dados["country"])
+        tabela.add_row("REGIÃO", dados["regionName"])
+        tabela.add_row("CIDADE", dados["city"])
         tabela.add_row("CEP", dados["zip"])
-        tabela.add_row("Latitude", str(dados["lat"]))
-        tabela.add_row("Longitude", str(dados["lon"]))
-        tabela.add_row("Fuso Horário", dados["timezone"])
+        tabela.add_row("LATITUDE", str(dados["lat"]))
+        tabela.add_row("LONGITUDE", str(dados["lon"]))
+        tabela.add_row("FUSO HORÁRIO", dados["timezone"])
         tabela.add_row("ISP", dados["isp"])
-        tabela.add_row("Organização", dados["org"])
+        tabela.add_row("ORGANIZAÇÃO", dados["org"])
 
-        console.print(tabela)
+        console.print()
+        console.print(Align.center(tabela))
+        console.print()
 
     except Exception as e:
-        console.print(f"[red]Erro ao buscar IP:[/red] {e}")
+        console.print(
+            Panel(
+                f"[bold red]ERRO AO BUSCAR IP[/bold red]\n\n[bold red]{e}[/bold red]",
+                border_style="red"
+            )
+        )
 
 
 while True:
     console.clear()
 
-    console.print(
-        Panel.fit(
-            "[bold green]VPN IP LOCATOR[/bold green]\n[white]Painel de Localização de IP[/white]",
-            border_style="bright_blue"
-        )
+    logo = """
+[bold red]
+██    ██ ██████  ███    ██
+██    ██ ██   ██ ████   ██
+██    ██ ██████  ██ ██  ██
+ ██  ██  ██      ██  ██ ██
+  ████   ██      ██   ████
+[/bold red]
+"""
+
+    painel_topo = Panel.fit(
+        f"""{logo}
+[bold red]VPN IP LOCATOR[/bold red]
+
+[bold red]PAINEL DE LOCALIZAÇÃO DE IP[/bold red]
+
+[bold red]@yrp369[/bold red]""",
+        border_style="red",
+        padding=(1, 5),
+        title="[bold red]◢ CYBER SYSTEM ◣[/bold red]",
+        subtitle="[bold red]STATUS: ONLINE[/bold red]"
     )
 
-    ip = Prompt.ask("Digite o IP para localizar")
+    console.print()
+    console.print(Align.center(painel_topo))
+    console.print()
+
+    ip = Prompt.ask("[bold red]DIGITE O IP PARA LOCALIZAR[/bold red]")
+
+    console.print()
     buscar_ip(ip)
 
-    continuar = Prompt.ask("\nDeseja pesquisar outro IP? (s/n)", default="s")
+    continuar = Prompt.ask(
+        "\n[bold red]DESEJA PESQUISAR OUTRO IP? (s/n)[/bold red]",
+        default="s"
+    )
 
     if continuar.lower() != "s":
-        console.print("[bold red]Encerrando painel VPN...[/bold red]")
+        console.print()
+        console.print(
+            Panel.fit(
+                "[bold red]ENCERRANDO VPN SYSTEM...[/bold red]",
+                border_style="red"
+            )
+        )
         break
 EOF
 ```
