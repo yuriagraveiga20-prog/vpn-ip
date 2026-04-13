@@ -143,7 +143,7 @@ EOF
 ## 4. Execute o painel
 
 ```bash
-python3 painel_vpn.py
+python3 ~/vpn-ip-panel/painel_vpn.py
 ```
 
 ---
